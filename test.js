@@ -1,12 +1,11 @@
-const http = require("http");
+const app = require("express")();
+const http = require("http").Server(app);
 const port = process.env.PORT || 3000;
 
-const server = http.createServer((req, res) => {
-	res.statusCode = 200;
-	res.setHeader("Content-Type", "text/html");
-	res.end("<h1>Hello World</h1>");
+app.get("/", (req, res) => {
+	res.send("hello");
+	res.sendStatus(200);
 });
-
-server.listen(port, () => {
-	console.log(`Server running at port ` + port);
+http.listen(4000, "localhost", () => {
+	console.log("listening on port 4000");
 });
