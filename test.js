@@ -122,6 +122,7 @@ setInterval(
 						);
 
 					addCall(uri);
+					console.log("done");
 				}
 			});
 		});
