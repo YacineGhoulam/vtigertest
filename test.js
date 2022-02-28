@@ -1,8 +1,6 @@
 const app = require("express")();
-const http = require("http").Server(app);
-const request = require("request");
 
-const port = process.env.PORT || 3000;
+const request = require("request");
 
 function waitfewseconds() {
 	setTimeout(() => {}, 5000);
@@ -124,7 +122,6 @@ setInterval(
 						);
 
 					addCall(uri);
-					console.log("Done");
 				}
 			});
 		});
@@ -134,9 +131,10 @@ setInterval(
 );
 
 app.get("/", (req, res) => {
-	res.send("hello");
+	res.send("<h1>Hello World</h1>");
 	res.sendStatus(200);
 });
-http.listen(4000, "localhost", () => {
-	console.log("listening on port 4000");
-});
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT);
