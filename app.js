@@ -215,6 +215,11 @@ app.post("/aircall/calls", (req, res) => {
 	res.sendStatus(200);
 });
 
+app.post("/outgoing", (req, res) => {
+	console.log(req.body);
+	res.sendStatus(200);
+});
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
