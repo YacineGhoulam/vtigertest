@@ -216,7 +216,7 @@ app.post("/aircall/calls", (req, res) => {
 });
 
 app.post("/outgoing", (req, res) => {
-	console.log(req.body);
+	console.log(req.params);
 	res.sendStatus(200);
 });
 
