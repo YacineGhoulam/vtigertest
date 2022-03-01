@@ -1,6 +1,8 @@
 const app = require("express")();
 const request = require("request");
 const CRM = require("vtiger");
+const bodyParser = require("body-parser");
+app.use(bodyParser.json());
 
 // Aircall Card
 const createInsightCardPayload = (lines) => {
