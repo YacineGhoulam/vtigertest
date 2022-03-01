@@ -1,6 +1,36 @@
 const app = require("express")();
-
 const request = require("request");
+const CRM = require("vtiger");
+
+// Aircall Card
+const createInsightCardPayload = (lines) => {
+	return {
+		contents: lines,
+	};
+};
+
+const sendInsightCard = (callId, payload) => {
+	const API_ID = "89825f2e0266eb7f77b73a6ec875a620";
+	const API_TOKEN = "1cb5bb8f7f12ba057c2e66289abd17b0";
+
+	const uri = `https://${API_ID}:${API_TOKEN}@api.aircall.io/v1/calls/${callId}/insight_cards`;
+
+	request.post(uri, { json: payload }, (error, response, body) => {
+		if (!!error) {
+			console.error("Error while sending insight card:", error);
+		} else {
+			console.log("HTTP body:", body);
+		}
+	});
+};
+
+let connection = new CRM.Connection(
+	"https://digimium2.od2.vtiger.com",
+	"yacine@digimium.fr",
+	"Kn5kbakmLT3UDZWE"
+);
+
+// Update Calls Modules
 
 function waitfewseconds() {
 	setTimeout(() => {}, 5000);
@@ -133,6 +163,54 @@ setInterval(
 
 app.get("/", (req, res) => {
 	res.send("<h1>Hello World</h1>");
+	res.sendStatus(200);
+});
+
+app.post("/aircall/calls", (req, res) => {
+	if (req.body.event === "call.created") {
+		const callId = req.body.data.id;
+		const phoneNumber = req.body.data.raw_digits;
+		connection
+			.login()
+			.then(() =>
+				connection.query(
+					"SELECT * FROM Contacts WHERE phone = '" +
+						phoneNumber +
+						"' OR mobile = '" +
+						phoneNumber +
+						"';"
+				)
+			)
+			.then((contact) => {
+				if (contact.length > 0) {
+					contact = contact[0];
+					const { id, lastname, firstname, email } =
+						contact;
+					id = id.split("x").pop();
+					let cardContent = [
+						{
+							type: "title",
+
+							text: `${firstname} ${lastname} is calling`,
+							link:
+								"https://digimium2.od2.vtiger.com/view/detail?module=Contacts&id=" +
+								id,
+						},
+						{
+							type: "shortText",
+							text: email,
+							label: "Email",
+							link: "https://www.youtube.com/watch?v=0T4UykXuJnI",
+						},
+					];
+
+					const payload =
+						createInsightCardPayload(cardContent);
+
+					sendInsightCard(callId, payload);
+				}
+			});
+	}
 	res.sendStatus(200);
 });
 
