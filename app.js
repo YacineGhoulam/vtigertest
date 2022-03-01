@@ -186,8 +186,7 @@ app.post("/aircall/calls", (req, res) => {
 			.then((contact) => {
 				if (contact.length > 0) {
 					contact = contact[0];
-					const { id, lastname, firstname, email } =
-						contact;
+					let { id, lastname, firstname, email } = contact;
 					id = id.split("x").pop();
 					let cardContent = [
 						{
