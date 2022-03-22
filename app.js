@@ -74,6 +74,7 @@ let isCallExistantHeader = {
 
 let calls = [];
 
+// Update calls every 3min
 setInterval(
 	() => {
 		// Set timing and URL
